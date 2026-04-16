@@ -1,0 +1,101 @@
+﻿case_id,优先主题,query,sku_id,预期动作,必需槽位,必需文档,是否调用工具,缺RAG是否必须拒答/追问,Gold rule,风险级别
+EVAL-COMP-001,电压/频率/插头兼容,De'Longhi这款全自动意式咖啡机（DELO-Bean-US-2027）在美国能直接用吗？家里是120V/60Hz，插座Type A/B。,SKU-DELO-Bean-US,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,N,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-002,电压/频率/插头兼容,我准备把DELO-Steam-EU-2028带去日本用，可以只买转接头吗？,SKU-DELO-Steam-EU,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,Y,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-003,电压/频率/插头兼容,DELO-Caps-UK-2029 能在国外直接用吗？,SKU-DELO-Caps-UK,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,Y,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-004,电压/频率/插头兼容,这台全自动意式咖啡机额定120V/60Hz，我家在英国，是不是能用？,SKU-JURA-Bean-US,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,N,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-005,电压/频率/插头兼容,Jura这款半自动奶泡咖啡机（JURA-Steam-EU-2028）在欧盟主要市场能直接用吗？家里是230V/50Hz，插座Type C/F/E。,SKU-JURA-Steam-EU,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,N,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-006,电压/频率/插头兼容,我准备把JURA-Caps-UK-2029带去日本用，可以只买转接头吗？,SKU-JURA-Caps-UK,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,Y,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-007,电压/频率/插头兼容,SMEG-Air-US-2027 能在国外直接用吗？,SKU-SMEG-Air-US,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,Y,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-008,电压/频率/插头兼容,这台台式蒸烤一体机额定220-240V/50Hz，我家在英国，是不是能用？,SKU-SMEG-Steam-EU,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,N,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-009,电压/频率/插头兼容,Smeg这款多功能烤面包烤箱（SMEG-Toast-UK-2029）在英国能直接用吗？家里是230V/50Hz，插座Type G。,SKU-SMEG-Toast-UK,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,N,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-010,电压/频率/插头兼容,我准备把BREV-Air-US-2027带去日本用，可以只买转接头吗？,SKU-BREV-Air-US,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,Y,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-011,电压/频率/插头兼容,BREV-Steam-UK-2028 能在国外直接用吗？,SKU-BREV-Steam-UK,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,Y,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-012,电压/频率/插头兼容,这台多功能烤面包烤箱额定220-240V/50Hz，我家在英国，是不是能用？,SKU-BREV-Toast-AU,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,N,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-013,电压/频率/插头兼容,Bosch这款60cm嵌入式洗碗机（BOSC-DW60-US-2027）在美国能直接用吗？家里是120V/60Hz，插座Type A/B。,SKU-BOSC-DW60-US,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,N,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-014,电压/频率/插头兼容,我准备把BOSC-DW45-EU-2028带去日本用，可以只买转接头吗？,SKU-BOSC-DW45-EU,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,Y,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-015,电压/频率/插头兼容,BOSC-DFS-UK-2029 能在国外直接用吗？,SKU-BOSC-DFS-UK,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,Y,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-016,电压/频率/插头兼容,这台60cm嵌入式洗碗机额定120V/60Hz，我家在英国，是不是能用？,SKU-MIEL-DW60-US,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,N,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-017,电压/频率/插头兼容,Miele这款45cm窄体洗碗机（MIEL-DW45-EU-2028）在欧盟主要市场能直接用吗？家里是230V/50Hz，插座Type C/F/E。,SKU-MIEL-DW45-EU,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,N,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-018,电压/频率/插头兼容,我准备把MIEL-DFS-UK-2029带去日本用，可以只买转接头吗？,SKU-MIEL-DFS-UK,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,Y,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-019,电压/频率/插头兼容,LIEB-BFR-EU-2027 能在国外直接用吗？,SKU-LIEB-BFR-EU,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,Y,只能根据兼容卡/说明书输出结论,高
+EVAL-COMP-020,电压/频率/插头兼容,这台法式多门冰箱额定220-240V/50Hz，我家在美国，是不是能用？,SKU-LIEB-FDR-UK,兼容结论/追问,"country_of_use,household_voltage_frequency,plug_type",SKU兼容安装卡,N,N,只能根据兼容卡/说明书输出结论,高
+EVAL-INST-001,安装条件,我家橱柜开孔大概60x82x58，这台BOSC-DW60-US-2027能装吗？还要不要单独回路？,SKU-BOSC-DW60-US,检索安装卡并核对开孔、电路,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-002,安装条件,BOSC-DW45-EU-2028到了就能开机吗，还是要静置/拆什么运输螺栓？,SKU-BOSC-DW45-EU,检索安装卡并给安装前检查项,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-003,安装条件,这台独立式洗碗机能自己装吗？,SKU-BOSC-DFS-UK,检索安装责任字段；未知则转人工,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-004,安装条件,我家只有普通插座，没有进水排水位，MIEL-DW60-US-2027能放进去吗？,SKU-MIEL-DW60-US,检索安装卡；若涉水涉电高风险则明确不可猜,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-005,安装条件,我家橱柜开孔大概60x82x58，这台MIEL-DW45-EU-2028能装吗？还要不要单独回路？,SKU-MIEL-DW45-EU,检索安装卡并核对开孔、电路,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-006,安装条件,MIEL-DFS-UK-2029到了就能开机吗，还是要静置/拆什么运输螺栓？,SKU-MIEL-DFS-UK,检索安装卡并给安装前检查项,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-007,安装条件,这台下冷冻冰箱能自己装吗？,SKU-LIEB-BFR-EU,检索安装责任字段；未知则转人工,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-008,安装条件,我家只有普通插座，没有进水排水位，LIEB-FDR-UK-2028能放进去吗？,SKU-LIEB-FDR-UK,检索安装卡；若涉水涉电高风险则明确不可猜,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-009,安装条件,我家橱柜开孔大概60x82x58，这台LIEB-WCN-EU-2029能装吗？还要不要单独回路？,SKU-LIEB-WCN-EU,检索安装卡并核对开孔、电路,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-010,安装条件,FISH-BFR-US-2027到了就能开机吗，还是要静置/拆什么运输螺栓？,SKU-FISH-BFR-US,检索安装卡并给安装前检查项,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-011,安装条件,这台法式多门冰箱能自己装吗？,SKU-FISH-FDR-UK,检索安装责任字段；未知则转人工,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-012,安装条件,我家只有普通插座，没有进水排水位，FISH-WCN-AU-2029能放进去吗？,SKU-FISH-WCN-AU,检索安装卡；若涉水涉电高风险则明确不可猜,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-013,安装条件,我家橱柜开孔大概60x82x58，这台AEG-WFL-EU-2027能装吗？还要不要单独回路？,SKU-AEG-WFL-EU,检索安装卡并核对开孔、电路,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-014,安装条件,AEG-HPD-UK-2028到了就能开机吗，还是要静置/拆什么运输螺栓？,SKU-AEG-HPD-UK,检索安装卡并给安装前检查项,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-015,安装条件,这台洗烘一体机能自己装吗？,SKU-AEG-WDC-EU,检索安装责任字段；未知则转人工,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-016,安装条件,我家只有普通插座，没有进水排水位，ELEC-WFL-US-2027能放进去吗？,SKU-ELEC-WFL-US,检索安装卡；若涉水涉电高风险则明确不可猜,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-017,安装条件,我家橱柜开孔大概60x82x58，这台ELEC-HPD-EU-2028能装吗？还要不要单独回路？,SKU-ELEC-HPD-EU,检索安装卡并核对开孔、电路,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-018,安装条件,ELEC-WDC-UK-2029到了就能开机吗，还是要静置/拆什么运输螺栓？,SKU-ELEC-WDC-UK,检索安装卡并给安装前检查项,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-019,安装条件,这台变频微波炉能自己装吗？,SKU-PANA-INV-JP,检索安装责任字段；未知则转人工,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-INST-020,安装条件,我家只有普通插座，没有进水排水位，PANA-COM-US-2028能放进去吗？,SKU-PANA-COM-US,检索安装卡；若涉水涉电高风险则明确不可猜,dimensions/cutout/power_requirements,SKU安装条件卡,N,Y,缺少尺寸或电气字段不得给可安装结论,极高
+EVAL-WAR-001,保修地域,我在美国买的Breville BREV-Steam-UK-2028，现在搬去英国用，坏了还能保修吗？,SKU-BREV-Steam-UK,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-002,保修地域,Breville这款机器在欧洲买、日本用，官方保修算吗？,SKU-BREV-Toast-AU,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-003,保修地域,没有发票只有序列号，Bosch能保修吗？,SKU-BOSC-DW60-US,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-004,保修地域,Bosch跨境使用是不是全球联保？,SKU-BOSC-DW45-EU,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-005,保修地域,我在美国买的Bosch BOSC-DFS-UK-2029，现在搬去英国用，坏了还能保修吗？,SKU-BOSC-DFS-UK,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-006,保修地域,Miele这款机器在欧洲买、日本用，官方保修算吗？,SKU-MIEL-DW60-US,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-007,保修地域,没有发票只有序列号，Miele能保修吗？,SKU-MIEL-DW45-EU,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-008,保修地域,Miele跨境使用是不是全球联保？,SKU-MIEL-DFS-UK,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-009,保修地域,我在美国买的Liebherr LIEB-BFR-EU-2027，现在搬去英国用，坏了还能保修吗？,SKU-LIEB-BFR-EU,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-010,保修地域,Liebherr这款机器在欧洲买、日本用，官方保修算吗？,SKU-LIEB-FDR-UK,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-011,保修地域,没有发票只有序列号，Liebherr能保修吗？,SKU-LIEB-WCN-EU,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-012,保修地域,Fisher & Paykel跨境使用是不是全球联保？,SKU-FISH-BFR-US,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-013,保修地域,我在美国买的Fisher & Paykel FISH-FDR-UK-2028，现在搬去英国用，坏了还能保修吗？,SKU-FISH-FDR-UK,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-014,保修地域,Fisher & Paykel这款机器在欧洲买、日本用，官方保修算吗？,SKU-FISH-WCN-AU,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-015,保修地域,没有发票只有序列号，AEG能保修吗？,SKU-AEG-WFL-EU,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-016,保修地域,AEG跨境使用是不是全球联保？,SKU-AEG-HPD-UK,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-017,保修地域,我在美国买的AEG AEG-WDC-EU-2029，现在搬去英国用，坏了还能保修吗？,SKU-AEG-WDC-EU,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-018,保修地域,Electrolux这款机器在欧洲买、日本用，官方保修算吗？,SKU-ELEC-WFL-US,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-019,保修地域,没有发票只有序列号，Electrolux能保修吗？,SKU-ELEC-HPD-EU,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-WAR-020,保修地域,Electrolux跨境使用是不是全球联保？,SKU-ELEC-WDC-UK,检索品牌保修政策；缺少购买地/使用地时追问,"purchase_region,use_region,serial_no,invoice",品牌保修政策,N,Y,不得口头扩展保修或全球联保,极高
+EVAL-DMG-001,签收破损,快递送来外箱角都瘪了，司机催我签收，BOSC-DW60-US-2027怎么办？,SKU-BOSC-DW60-US,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-002,签收破损,昨天签收今天拆开，发现45cm窄体洗碗机玻璃裂了，还能处理吗？,SKU-BOSC-DW45-EU,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-003,签收破损,我只拍了两张照片没视频，可以直接退款吗？,SKU-BOSC-DFS-UK,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-004,签收破损,外箱没坏，但里面门板凹了，是不是质量问题？,SKU-MIEL-DW60-US,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-005,签收破损,快递送来外箱角都瘪了，司机催我签收，MIEL-DW45-EU-2028怎么办？,SKU-MIEL-DW45-EU,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-006,签收破损,昨天签收今天拆开，发现独立式洗碗机玻璃裂了，还能处理吗？,SKU-MIEL-DFS-UK,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-007,签收破损,我只拍了两张照片没视频，可以直接退款吗？,SKU-LIEB-BFR-EU,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-008,签收破损,外箱没坏，但里面门板凹了，是不是质量问题？,SKU-LIEB-FDR-UK,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-009,签收破损,快递送来外箱角都瘪了，司机催我签收，LIEB-WCN-EU-2029怎么办？,SKU-LIEB-WCN-EU,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-010,签收破损,昨天签收今天拆开，发现下冷冻冰箱玻璃裂了，还能处理吗？,SKU-FISH-BFR-US,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-011,签收破损,我只拍了两张照片没视频，可以直接退款吗？,SKU-FISH-FDR-UK,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-012,签收破损,外箱没坏，但里面门板凹了，是不是质量问题？,SKU-FISH-WCN-AU,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-013,签收破损,快递送来外箱角都瘪了，司机催我签收，AEG-WFL-EU-2027怎么办？,SKU-AEG-WFL-EU,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-014,签收破损,昨天签收今天拆开，发现热泵烘干机玻璃裂了，还能处理吗？,SKU-AEG-HPD-UK,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-015,签收破损,我只拍了两张照片没视频，可以直接退款吗？,SKU-AEG-WDC-EU,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-016,签收破损,外箱没坏，但里面门板凹了，是不是质量问题？,SKU-ELEC-WFL-US,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-017,签收破损,快递送来外箱角都瘪了，司机催我签收，ELEC-HPD-EU-2028怎么办？,SKU-ELEC-HPD-EU,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-018,签收破损,昨天签收今天拆开，发现洗烘一体机玻璃裂了，还能处理吗？,SKU-ELEC-WDC-UK,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-019,签收破损,我只拍了两张照片没视频，可以直接退款吗？,SKU-PANA-INV-JP,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-DMG-020,签收破损,外箱没坏，但里面门板凹了，是不是质量问题？,SKU-PANA-COM-US,先取证再判责,"delivery_status,damage_visibility,evidence_photos,waybill_photo",类目签收破损SOP,Y,Y,证据不足只能补证或转人工，不得直接承诺,极高
+EVAL-PRI-001,降价争议,昨天刚下单DYSO-RVC-US-2027，今天便宜300，给补差吗？,SKU-DYSO-RVC-US,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-002,降价争议,已经发货了但还没安装，降价了，能不能退差价不要折腾退货？,SKU-DYSO-CDV-EU,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-003,降价争议,活动切到会员价了，我不是会员，能补吗？,SKU-DYSO-WFW-UK,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-004,降价争议,如果不补差我只能退了重买，这种能走例外吗？,SKU-IROB-RVC-US,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-005,降价争议,昨天刚下单IROB-CDV-EU-2028，今天便宜300，给补差吗？,SKU-IROB-CDV-EU,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-006,降价争议,已经发货了但还没安装，降价了，能不能退差价不要折腾退货？,SKU-IROB-WFW-UK,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-007,降价争议,活动切到会员价了，我不是会员，能补吗？,SKU-BLUE-TAP-US,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-008,降价争议,如果不补差我只能退了重买，这种能走例外吗？,SKU-BLUE-HEP-EU,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-009,降价争议,昨天刚下单BLUE-HMP-UK-2029，今天便宜300，给补差吗？,SKU-BLUE-HMP-UK,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-010,降价争议,已经发货了但还没安装，降价了，能不能退差价不要折腾退货？,SKU-STAD-TAP-EU,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-011,降价争议,活动切到会员价了，我不是会员，能补吗？,SKU-STAD-HEP-UK,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-012,降价争议,如果不补差我只能退了重买，这种能走例外吗？,SKU-STAD-HMP-EU,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-013,降价争议,昨天刚下单PANA-INV-JP-2027，今天便宜300，给补差吗？,SKU-PANA-INV-JP,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-014,降价争议,已经发货了但还没安装，降价了，能不能退差价不要折腾退货？,SKU-PANA-COM-US,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-015,降价争议,活动切到会员价了，我不是会员，能补吗？,SKU-PANA-GRL-EU,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-016,降价争议,如果不补差我只能退了重买，这种能走例外吗？,SKU-RUSS-INV-UK,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-017,降价争议,昨天刚下单RUSS-COM-EU-2028，今天便宜300，给补差吗？,SKU-RUSS-COM-EU,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-018,降价争议,已经发货了但还没安装，降价了，能不能退差价不要折腾退货？,SKU-RUSS-GRL-US,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-019,降价争议,活动切到会员价了，我不是会员，能补吗？,SKU-ELIC-HOD-US,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高
+EVAL-PRI-020,降价争议,如果不补差我只能退了重买，这种能走例外吗？,SKU-ELIC-IDC-EU,检索价格政策并视情况调用OMS/审批,"order_time,price_drop_time,order_status,price_gap_amount",类目价格争议政策,Y,Y,无政策卡不得承诺补差，但可比较退货成本后建议例外审批,高

@@ -1,0 +1,9 @@
+{
+  "generated_at": "2026-04-15T16:37:37.967961",
+  "orders": 100,
+  "logistics": 100,
+  "refunds": 10,
+  "compensations": 10,
+  "risk_signals": 10,
+  "eval_multiturn_cases": 10
+}

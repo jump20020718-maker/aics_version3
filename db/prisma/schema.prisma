@@ -1,0 +1,429 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CustomerChannel {
+  web
+  wechat
+}
+
+enum OrderLifecycle {
+  processing
+  closed
+}
+
+enum ShipmentStatus {
+  label_created
+  customs_clearance
+  in_transit
+  out_for_delivery
+  delivered
+  exception
+  cancelled
+}
+
+enum RefundStatus {
+  open
+  closed
+  rejected
+  approved
+}
+
+enum ApprovalLevel {
+  AI
+  L1
+  L2
+  L3
+}
+
+enum RiskSeverity {
+  low
+  medium
+  high
+  critical
+}
+
+enum SessionResolution {
+  open
+  resolved
+  handoff
+  closed
+}
+
+model Brand {
+  brandId                   String   @id @map("brand_id")
+  name                      String
+  originCountry             String?  @map("origin_country")
+  officialWarrantySupported Boolean  @default(false) @map("official_warranty_supported")
+  createdAt                 DateTime @default(now()) @map("created_at")
+  skus                      Sku[]
+
+  @@map("brands")
+}
+
+model Category {
+  categoryId   String   @id @map("category_id")
+  name         String
+  subCategory  String?  @map("sub_category")
+  createdAt    DateTime @default(now()) @map("created_at")
+  skus         Sku[]
+
+  @@map("categories")
+}
+
+model Sku {
+  skuId                  String   @id @map("sku_id")
+  brandId                String   @map("brand_id")
+  categoryId             String   @map("category_id")
+  brandName              String   @map("brand_name")
+  categoryName           String   @map("category_name")
+  model                  String
+  productName            String   @map("product_name")
+  versionCountry         String   @map("version_country")
+  ratedVoltage           String?  @map("rated_voltage")
+  ratedFrequency         String?  @map("rated_frequency")
+  plugType               String?  @map("plug_type")
+  powerWatt              Int?     @map("power_watt")
+  certificationMark      String?  @map("certification_mark")
+  chinaUsability         String?  @map("china_usability")
+  chinaVoltageNote       String?  @map("china_voltage_note")
+  chinaPlugAdapter       String?  @map("china_plug_adapter")
+  warrantyType           String?  @map("warranty_type")
+  warrantyDurationDays   Int?     @map("warranty_duration_days")
+  returnPolicyType       String?  @map("return_policy_type")
+  importChannel          String?  @map("import_channel")
+  importerName           String?  @map("importer_name")
+  salesRuleReturn        String?  @map("sales_rule_return")
+  salesRuleReturnWindow  Int?     @map("sales_rule_return_window_days")
+  metadataJson           Json     @default("{}") @map("metadata_json")
+  createdAt              DateTime @default(now()) @map("created_at")
+  brand                  Brand    @relation(fields: [brandId], references: [brandId])
+  category               Category @relation(fields: [categoryId], references: [categoryId])
+  serviceNeedProfile     ServiceNeedProfile?
+  orders                 Order[]
+
+  @@map("skus")
+}
+
+model KnowledgeDoc {
+  docId               String    @id @map("doc_id")
+  docType             String    @map("doc_type")
+  skuId               String?   @map("sku_id")
+  brand               String?
+  category            String?
+  title               String
+  locale              String    @default("zh-CN")
+  sourceType          String    @map("source_type")
+  sourceOfTruthTier   String    @map("source_of_truth_tier")
+  confidenceCeiling   Decimal?  @db.Decimal(4, 2) @map("confidence_ceiling")
+  replaceWithRealDoc  Boolean   @default(false) @map("replace_with_real_doc")
+  priorityTopics      Json      @default("[]") @map("priority_topics")
+  metadataJson        Json      @default("{}") @map("metadata_json")
+  rawContent          Json      @map("raw_content")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  chunks              DocChunk[]
+
+  @@index([skuId, docType])
+  @@map("knowledge_docs")
+}
+
+model DocChunk {
+  chunkId       String   @id @map("chunk_id")
+  docId         String   @map("doc_id")
+  chunkIndex    Int      @map("chunk_index")
+  chunkText     String   @map("chunk_text")
+  embedding     Unsupported("vector(1536)")?
+  metadataJson  Json     @default("{}") @map("metadata_json")
+  createdAt     DateTime @default(now()) @map("created_at")
+  knowledgeDoc  KnowledgeDoc @relation(fields: [docId], references: [docId], onDelete: Cascade)
+
+  @@map("doc_chunks")
+}
+
+model ServiceNeedProfile {
+  skuId       String   @id @map("sku_id")
+  profileJson Json     @map("profile_json")
+  createdAt   DateTime @default(now()) @map("created_at")
+  sku         Sku      @relation(fields: [skuId], references: [skuId], onDelete: Cascade)
+
+  @@map("service_need_profiles")
+}
+
+model Order {
+  orderId             String           @id @map("order_id")
+  sessionId           String           @unique @map("session_id")
+  customerId          String           @map("customer_id")
+  customerTier        String?          @map("customer_tier")
+  channel             CustomerChannel
+  skuId               String           @map("sku_id")
+  totalAmountCny      Decimal          @db.Decimal(10, 2) @map("total_amount_cny")
+  shippingFeeCny      Decimal          @default(0) @db.Decimal(10, 2) @map("shipping_fee_cny")
+  orderStatus         OrderLifecycle   @map("order_status")
+  paymentStatus       String           @map("payment_status")
+  shipmentStatus      ShipmentStatus   @map("shipment_status")
+  destinationRegion   String?          @map("destination_region")
+  destinationCity     String?          @map("destination_city")
+  destinationDistrict String?          @map("destination_district")
+  promisedEtaStart    DateTime?        @db.Date @map("promised_eta_start")
+  promisedEtaEnd      DateTime?        @db.Date @map("promised_eta_end")
+  createdAt           DateTime         @map("created_at")
+  paidAt              DateTime?        @map("paid_at")
+  toolPayload         Json             @default("{}") @map("tool_payload")
+  sku                 Sku              @relation(fields: [skuId], references: [skuId])
+  shipments           OrderShipment[]
+  refunds             RefundRequest[]
+  compensations       CompensationLedger[]
+  riskSignals         RiskSignal[]
+  session             ChatSession?
+
+  @@index([customerId, createdAt(sort: Desc)])
+  @@map("orders")
+}
+
+model OrderShipment {
+  shipmentId         String         @id @map("shipment_id")
+  orderId            String         @map("order_id")
+  trackingNo         String         @unique @map("tracking_no")
+  carrierName        String?        @map("carrier_name")
+  transportMode      String?        @map("transport_mode")
+  originHub          String?        @map("origin_hub")
+  currentStatus      ShipmentStatus @map("current_status")
+  currentNodeLabel   String?        @map("current_node_label")
+  currentNodeDetail  String?        @map("current_node_detail")
+  customsStatus      String?        @map("customs_status")
+  lastUpdateAt       DateTime?      @map("last_update_at")
+  etaStart           DateTime?      @map("eta_start")
+  etaEnd             DateTime?      @map("eta_end")
+  outboundAt         DateTime?      @map("outbound_at")
+  customsReleasedAt  DateTime?      @map("customs_released_at")
+  deliveredAt        DateTime?      @map("delivered_at")
+  abnormalFlag       String?        @map("abnormal_flag")
+  abnormalReason     String?        @map("abnormal_reason")
+  trackingSummary    String?        @map("tracking_summary")
+  order              Order          @relation(fields: [orderId], references: [orderId], onDelete: Cascade)
+
+  @@map("order_shipments")
+}
+
+model RefundRequest {
+  refundId               String       @id @map("refund_id")
+  orderId                String       @map("order_id")
+  sessionId              String       @map("session_id")
+  customerId             String       @map("customer_id")
+  sceneType              String       @map("scene_type")
+  reasonType             String       @map("reason_type")
+  requestedAmountCny     Decimal      @db.Decimal(10, 2) @map("requested_amount_cny")
+  evidenceStatus         String?      @map("evidence_status")
+  policyRoute            String?      @map("policy_route")
+  requiredDocRefs        String?      @map("required_doc_refs")
+  status                 RefundStatus
+  approvalLevelRequired  String?      @map("approval_level_required")
+  suggestedAction        String?      @map("suggested_action")
+  requestedAt            DateTime     @map("requested_at")
+  decisionSummary        String?      @map("decision_summary")
+  order                  Order        @relation(fields: [orderId], references: [orderId], onDelete: Cascade)
+
+  @@map("refund_requests")
+}
+
+model CompensationLedger {
+  ledgerId          String        @id @map("ledger_id")
+  orderId           String        @map("order_id")
+  sessionId         String        @map("session_id")
+  customerId        String        @map("customer_id")
+  compensationType  String        @map("compensation_type")
+  amountCny         Decimal       @db.Decimal(10, 2) @map("amount_cny")
+  approvalLevel     ApprovalLevel @map("approval_level")
+  approverRole      String        @map("approver_role")
+  ruleCardRef       String?       @map("rule_card_ref")
+  evidenceIds       String?       @map("evidence_ids")
+  status            String
+  issuedAt          DateTime?     @map("issued_at")
+  riskGuardrail     String?       @map("risk_guardrail")
+  order             Order         @relation(fields: [orderId], references: [orderId], onDelete: Cascade)
+
+  @@map("compensation_ledger")
+}
+
+model RiskSignal {
+  signalId         String       @id @map("signal_id")
+  orderId          String       @map("order_id")
+  sessionId        String       @map("session_id")
+  customerId       String       @map("customer_id")
+  signalType       String       @map("signal_type")
+  severity         RiskSeverity
+  detectedAt       DateTime     @map("detected_at")
+  evidenceSummary  String       @map("evidence_summary")
+  autoActionTaken  String?      @map("auto_action_taken")
+  reviewRequired   Boolean      @default(true) @map("review_required")
+  reviewStatus     String       @default("pending") @map("review_status")
+  assignedQueue    String?      @map("assigned_queue")
+  notes            String?
+  order            Order        @relation(fields: [orderId], references: [orderId], onDelete: Cascade)
+
+  @@map("risk_signals")
+}
+
+model ChatSession {
+  sessionId         String            @id @map("session_id")
+  channel           CustomerChannel
+  customerId        String            @map("customer_id")
+  currentScene      String?           @map("current_scene")
+  currentSkuId      String?           @map("current_sku_id")
+  emotionState      String?           @map("emotion_state")
+  slotJson          Json              @default("{}") @map("slot_json")
+  riskLevel         String?           @map("risk_level")
+  resolutionStatus  SessionResolution @default(open) @map("resolution_status")
+  summaryText       String?           @map("summary_text")
+  createdAt         DateTime          @default(now()) @map("created_at")
+  order             Order             @relation(fields: [sessionId], references: [sessionId])
+  messages          ChatMessage[]
+  toolCalls         ToolCall[]
+  evidenceAssets    EvidenceAsset[]
+  handoffCases      HandoffCase[]
+  memoryCases       MemoryCase[]
+
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  messageId     String      @id @map("message_id")
+  sessionId     String      @map("session_id")
+  role          String
+  content       String
+  citations     Json        @default("[]")
+  routeTrace    Json        @default("{}") @map("route_trace")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  session       ChatSession @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
+
+  @@map("chat_messages")
+}
+
+model ToolCall {
+  callId      String      @id @map("call_id")
+  sessionId   String      @map("session_id")
+  toolName    String      @map("tool_name")
+  params      Json        @default("{}")
+  result      Json        @default("{}")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  session     ChatSession @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
+
+  @@map("tool_calls")
+}
+
+model EvidenceAsset {
+  evidenceId    String      @id @map("evidence_id")
+  sessionId     String      @map("session_id")
+  orderId       String?     @map("order_id")
+  assetType     String      @map("asset_type")
+  fileUrl       String      @map("file_url")
+  metadataJson  Json        @default("{}") @map("metadata_json")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  session       ChatSession @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
+
+  @@map("evidence_assets")
+}
+
+model HandoffCase {
+  handoffId   String      @id @map("handoff_id")
+  sessionId   String      @map("session_id")
+  level       ApprovalLevel
+  summary     Json
+  status      String
+  createdAt   DateTime    @default(now()) @map("created_at")
+  session     ChatSession @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
+
+  @@map("handoff_cases")
+}
+
+model MemoryCase {
+  caseId       String      @id @map("case_id")
+  sessionId    String?     @map("session_id")
+  summary      String
+  approvedBy   String?     @map("approved_by")
+  expiresAt    DateTime?   @map("expires_at")
+  payloadJson  Json        @default("{}") @map("payload_json")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  session      ChatSession? @relation(fields: [sessionId], references: [sessionId])
+
+  @@map("memory_cases")
+}
+
+model EvalCase {
+  caseId             String           @id @map("case_id")
+  category           String
+  sceneType          String           @map("scene_type")
+  channel            CustomerChannel?
+  query              String
+  contextTurns       Json             @default("[]") @map("context_turns")
+  goldActionCategory String           @map("gold_action_category")
+  goldMustContain    Json             @default("[]") @map("gold_must_contain")
+  goldMustNotContain Json             @default("[]") @map("gold_must_not_contain")
+  notes              String?
+
+  @@map("eval_cases")
+}
+
+model EvalRun {
+  runId       String   @id @map("run_id")
+  evalSet     String   @map("eval_set")
+  version     String
+  resultJson  Json     @map("result_json")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("eval_runs")
+}
+
+model AbTestExperiment {
+  experimentId    String          @id @map("experiment_id")
+  name            String
+  experimentType  String          @map("experiment_type")
+  controlVariantId String?        @map("control_variant_id")
+  status          String
+  metricJson      Json            @default("[]") @map("metric_json")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  variants        AbTestVariant[]
+  runs            AbTestRun[]
+
+  @@map("ab_test_experiments")
+}
+
+model AbTestVariant {
+  variantId      String           @id @map("variant_id")
+  experimentId   String           @map("experiment_id")
+  variantName    String           @map("variant_name")
+  configJson     Json             @map("config_json")
+  createdAt      DateTime         @default(now()) @map("created_at")
+  experiment     AbTestExperiment @relation(fields: [experimentId], references: [experimentId], onDelete: Cascade)
+  runs           AbTestRun[]
+
+  @@map("ab_test_variants")
+}
+
+model AbTestRun {
+  runId          String           @id @map("run_id")
+  experimentId   String           @map("experiment_id")
+  variantId      String           @map("variant_id")
+  trafficPercent Decimal?         @db.Decimal(5, 2) @map("traffic_percent")
+  resultJson     Json             @map("result_json")
+  createdAt      DateTime         @default(now()) @map("created_at")
+  experiment     AbTestExperiment @relation(fields: [experimentId], references: [experimentId], onDelete: Cascade)
+  variant        AbTestVariant    @relation(fields: [variantId], references: [variantId], onDelete: Cascade)
+
+  @@map("ab_test_runs")
+}
+
+model Event {
+  eventId       String   @id @map("event_id")
+  sessionId     String?  @map("session_id")
+  eventType     String   @map("event_type")
+  payloadJson   Json     @default("{}") @map("payload_json")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("events")
+}

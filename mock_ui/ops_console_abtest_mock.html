@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Console · AiServe 运营控制台 + A/B Test</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --border-soft: #f1f2f4;
+      --text-1: #0f172a;
+      --text-2: #475569;
+      --text-3: #94a3b8;
+      --primary: #4f46e5;
+      --primary-50: #eef2ff;
+      --primary-100: #e0e7ff;
+      --primary-600: #4338ca;
+      --success: #059669;
+      --success-50: #ecfdf5;
+      --warning: #d97706;
+      --warning-50: #fffbeb;
+      --danger: #dc2626;
+      --danger-50: #fef2f2;
+      --indigo: #6366f1;
+      --purple: #a855f7;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text-1);
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 13.5px; line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top bar */
+    .topbar {
+      height: 52px; background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 20px; gap: 24px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-mark { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #6366f1, #4f46e5); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+    .brand-name { font-weight: 600; font-size: 14px; }
+    .brand-sub { color: var(--text-3); font-size: 12px; padding-left: 10px; border-left: 1px solid var(--border); }
+    .nav-tabs { display: flex; gap: 2px; margin-left: 12px; }
+    .nav-tab { padding: 7px 12px; border-radius: 7px; color: var(--text-2); font-size: 13px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .nav-tab:hover { background: var(--border-soft); }
+    .nav-tab.active { background: var(--primary-50); color: var(--primary); }
+    .top-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .search { display: flex; align-items: center; gap: 8px; padding: 6px 10px; width: 240px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text-3); font-size: 12.5px; }
+    .search kbd { margin-left: auto; font-family: "JetBrains Mono", monospace; font-size: 11px; padding: 1px 5px; border: 1px solid var(--border); border-radius: 4px; background: #fff; color: var(--text-3); }
+    .icon-btn { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; color: var(--text-2); cursor: pointer; }
+    .icon-btn:hover { background: var(--border-soft); }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; display: grid; place-items: center; font-weight: 600; font-size: 11.5px; }
+
+    /* Shell */
+    .shell {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      height: calc(100vh - 52px);
+    }
+
+    /* Side nav */
+    .sidenav {
+      background: #fff;
+      border-right: 1px solid var(--border);
+      padding: 14px 10px;
+      overflow-y: auto;
+    }
+    .nav-section { margin-bottom: 16px; }
+    .nav-label {
+      padding: 4px 10px; font-size: 10.5px; font-weight: 600;
+      color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 7px 10px; border-radius: 7px;
+      font-size: 13px; color: var(--text-2); font-weight: 500;
+      cursor: pointer; margin-bottom: 1px;
+    }
+    .nav-item:hover { background: var(--border-soft); color: var(--text-1); }
+    .nav-item.active { background: var(--primary-50); color: var(--primary); font-weight: 600; }
+    .nav-item .ni { width: 16px; text-align: center; font-size: 14px; }
+    .nav-item .count { margin-left: auto; font-size: 11px; color: var(--text-3); }
+    .nav-item.active .count { color: var(--primary); }
+
+    /* Main */
+    .main {
+      overflow-y: auto;
+      padding: 20px 24px 40px;
+    }
+    .main-head {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 18px;
+    }
+    .main-head h1 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+    .main-head p { margin: 4px 0 0; color: var(--text-2); font-size: 13px; }
+    .head-controls { display: flex; gap: 8px; }
+    .btn {
+      padding: 6px 11px; font-size: 12.5px; font-weight: 500;
+      border: 1px solid var(--border); border-radius: 7px;
+      background: #fff; color: var(--text-1); cursor: pointer;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .btn:hover { background: var(--bg); }
+    .btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn.primary:hover { background: var(--primary-600); }
+
+    .range-tabs { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #fff; }
+    .range-tab { padding: 6px 11px; font-size: 12px; color: var(--text-2); cursor: pointer; border-right: 1px solid var(--border); }
+    .range-tab:last-child { border-right: none; }
+    .range-tab.active { background: var(--text-1); color: #fff; }
+
+    /* KPI grid */
+    .kpi-grid {
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px; margin-bottom: 18px;
+    }
+    .kpi {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .kpi-label {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; color: var(--text-2); font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .kpi-icon {
+      width: 24px; height: 24px; border-radius: 6px;
+      display: grid; place-items: center;
+      font-size: 13px;
+    }
+    .kpi-icon.i1 { background: var(--primary-50); color: var(--primary); }
+    .kpi-icon.i2 { background: #ecfdf5; color: var(--success); }
+    .kpi-icon.i3 { background: #fffbeb; color: var(--warning); }
+    .kpi-icon.i4 { background: #f3e8ff; color: var(--purple); }
+    .kpi-val {
+      font-size: 26px; font-weight: 700; letter-spacing: -0.02em;
+      color: var(--text-1); margin-bottom: 4px;
+    }
+    .kpi-delta {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11.5px; font-weight: 600;
+    }
+    .kpi-delta.up { color: var(--success); }
+    .kpi-delta.down { color: var(--danger); }
+    .kpi-delta span { color: var(--text-3); font-weight: 400; margin-left: 4px; }
+
+    /* Sparkline */
+    .spark { margin-top: 10px; height: 36px; width: 100%; }
+
+    /* Section heading */
+    .sec-h {
+      display: flex; justify-content: space-between; align-items: center;
+      margin: 8px 0 10px;
+    }
+    .sec-h h2 { margin: 0; font-size: 15px; font-weight: 600; }
+    .sec-h .sub { color: var(--text-3); font-size: 12px; }
+
+    /* Two-column split */
+    .split {
+      display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+
+    /* Main chart */
+    .chart-wrap { height: 220px; margin-top: 4px; }
+
+    .legend { display: flex; gap: 16px; margin-top: 8px; }
+    .legend-item { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-2); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+    /* Risk gates */
+    .gate-list { display: grid; gap: 8px; }
+    .gate-row {
+      display: grid; grid-template-columns: 1fr auto auto;
+      gap: 10px; align-items: center;
+      padding: 9px 0; border-bottom: 1px solid var(--border-soft);
+    }
+    .gate-row:last-child { border-bottom: none; }
+    .gate-name { font-size: 12.5px; font-weight: 500; }
+    .gate-name .mono { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--text-3); margin-left: 5px; }
+    .gate-bar {
+      width: 100px; height: 6px; background: var(--border-soft);
+      border-radius: 3px; overflow: hidden;
+    }
+    .gate-fill { height: 100%; border-radius: 3px; }
+    .gate-fill.pass { background: var(--success); }
+    .gate-fill.fail { background: var(--danger); }
+    .gate-status {
+      font-size: 11px; font-weight: 600;
+      padding: 2px 7px; border-radius: 4px;
+    }
+    .gate-status.pass { background: var(--success-50); color: var(--success); }
+    .gate-status.fail { background: var(--danger-50); color: var(--danger); }
+
+    /* A/B section */
+    .ab-head {
+      display: flex; justify-content: space-between; align-items: center;
+      margin: 22px 0 12px;
+    }
+    .ab-head h2 { margin: 0; font-size: 16px; font-weight: 600; }
+    .ab-head p { margin: 3px 0 0; color: var(--text-2); font-size: 12.5px; }
+
+    .ab-split {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .variant {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      position: relative;
+    }
+    .variant.winner {
+      border: 1.5px solid var(--primary);
+      background: linear-gradient(135deg, #fff 0%, #f5f3ff 100%);
+    }
+    .variant .win-badge {
+      position: absolute; top: -9px; right: 14px;
+      background: var(--primary); color: #fff;
+      font-size: 10.5px; font-weight: 700;
+      padding: 3px 9px; border-radius: 12px;
+      letter-spacing: 0.04em;
+    }
+    .v-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .v-name {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11.5px; font-weight: 600;
+      padding: 2px 7px; border-radius: 4px;
+      background: var(--border-soft); color: var(--text-2);
+    }
+    .v-split-pill { font-size: 11px; color: var(--text-3); }
+    .v-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .v-desc { font-size: 12.5px; color: var(--text-2); margin-bottom: 12px; line-height: 1.55; }
+
+    .v-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .v-metric {
+      padding: 10px 12px; border-radius: 8px;
+      background: var(--bg);
+    }
+    .v-metric-label { font-size: 10.5px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
+    .v-metric-val { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+    .v-metric-val.hi { color: var(--success); }
+    .v-metric-val.lo { color: var(--danger); }
+    .v-metric-val.na { color: var(--text-1); }
+
+    /* Experiment table */
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 12.5px;
+    }
+    th, td {
+      text-align: left; padding: 10px 12px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    th {
+      background: var(--bg);
+      font-size: 11px; font-weight: 600;
+      color: var(--text-2); text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    th:first-child { border-top-left-radius: 8px; }
+    th:last-child { border-top-right-radius: 8px; }
+    td { color: var(--text-1); }
+    td.mono { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--text-2); }
+    .delta { font-weight: 600; }
+    .delta.up { color: var(--success); }
+    .delta.down { color: var(--danger); }
+    .win-tag {
+      display: inline-block;
+      padding: 1px 6px; border-radius: 4px;
+      font-size: 10.5px; font-weight: 600;
+      background: var(--primary-50); color: var(--primary);
+    }
+
+    /* Decision card */
+    .decision {
+      background: linear-gradient(135deg, #f0f9ff 0%, #eef2ff 100%);
+      border: 1px solid #c7d2fe;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-top: 14px;
+    }
+    .decision-head {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 11.5px; font-weight: 600; color: var(--primary);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 7px;
+    }
+    .decision-head::before { content: "◆"; }
+    .decision h4 { margin: 0 0 4px; font-size: 14px; font-weight: 600; }
+    .decision p { margin: 0; font-size: 12.5px; line-height: 1.6; color: var(--text-2); }
+    .decision ul { margin: 8px 0 0; padding-left: 20px; font-size: 12.5px; color: var(--text-2); }
+    .decision li { margin-bottom: 3px; }
+
+    @media (max-width: 1100px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .split, .ab-split { grid-template-columns: 1fr; }
+      .shell { grid-template-columns: 1fr; }
+      .sidenav { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">◆</div>
+      <span class="brand-name">AiServe</span>
+      <span class="brand-sub">跨境家电 AI 客服</span>
+    </div>
+    <nav class="nav-tabs">
+      <a class="nav-tab">Inbox</a>
+      <a class="nav-tab">Handoff</a>
+      <a class="nav-tab active">Console</a>
+      <a class="nav-tab">Knowledge</a>
+    </nav>
+    <div class="top-right">
+      <div class="search">
+        <span>🔍</span>
+        <span>搜实验 / 指标 / 文档</span>
+        <kbd>⌘K</kbd>
+      </div>
+      <div class="icon-btn">🔔</div>
+      <div class="avatar">JL</div>
+    </div>
+  </header>
+
+  <div class="shell">
+    <!-- Side nav -->
+    <aside class="sidenav">
+      <div class="nav-section">
+        <div class="nav-label">Overview</div>
+        <div class="nav-item active"><span class="ni">📊</span>业务总览</div>
+        <div class="nav-item"><span class="ni">🎯</span>评测结果 <span class="count">160</span></div>
+        <div class="nav-item"><span class="ni">⚠</span>风控门槛</div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Experiments</div>
+        <div class="nav-item"><span class="ni">🧪</span>A/B Test <span class="count">2</span></div>
+        <div class="nav-item"><span class="ni">📝</span>Prompt 版本</div>
+        <div class="nav-item"><span class="ni">🔍</span>检索策略</div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Data</div>
+        <div class="nav-item"><span class="ni">📦</span>RAG 资产 <span class="count">310</span></div>
+        <div class="nav-item"><span class="ni">🏷</span>SKU Master <span class="count">60</span></div>
+        <div class="nav-item"><span class="ni">📁</span>Badcase 池</div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Settings</div>
+        <div class="nav-item"><span class="ni">⚙</span>权限</div>
+        <div class="nav-item"><span class="ni">🔔</span>告警</div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <div class="main-head">
+        <div>
+          <h1>业务总览</h1>
+          <p>最近 7 天 · mock 周期 · 数据来自 160 条评测 + 100 条 mock 会话</p>
+        </div>
+        <div class="head-controls">
+          <div class="range-tabs">
+            <span class="range-tab">24h</span>
+            <span class="range-tab active">7d</span>
+            <span class="range-tab">30d</span>
+            <span class="range-tab">90d</span>
+          </div>
+          <button class="btn">⬇ 导出</button>
+          <button class="btn primary">+ 新建实验</button>
+        </div>
+      </div>
+
+      <!-- KPI row -->
+      <div class="kpi-grid">
+        <div class="kpi">
+          <div class="kpi-label">自动解决率 <div class="kpi-icon i1">✓</div></div>
+          <div class="kpi-val">58.2<span style="font-size:16px;color:var(--text-3);">%</span></div>
+          <div class="kpi-delta up">↑ 3.1%<span>vs 上周</span></div>
+          <svg class="spark" viewBox="0 0 200 36" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#4f46e5" stroke-width="1.8" points="0,22 20,18 40,24 60,15 80,20 100,12 120,16 140,10 160,14 180,8 200,11" />
+            <polyline fill="rgba(79,70,229,0.08)" stroke="none" points="0,22 20,18 40,24 60,15 80,20 100,12 120,16 140,10 160,14 180,8 200,11 200,36 0,36" />
+          </svg>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">人工接管率 <div class="kpi-icon i2">↑</div></div>
+          <div class="kpi-val">34.0<span style="font-size:16px;color:var(--text-3);">%</span></div>
+          <div class="kpi-delta down">↓ 2.4%<span>vs 上周</span></div>
+          <svg class="spark" viewBox="0 0 200 36" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#059669" stroke-width="1.8" points="0,12 20,14 40,10 60,16 80,13 100,18 120,15 140,20 160,17 180,22 200,19" />
+          </svg>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">风险门槛通过 <div class="kpi-icon i3">!</div></div>
+          <div class="kpi-val">3 / 3</div>
+          <div class="kpi-delta up">全部过线<span>B3 / B6 / B10</span></div>
+          <svg class="spark" viewBox="0 0 200 36" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#d97706" stroke-width="1.8" points="0,20 20,22 40,18 60,21 80,19 100,20 120,16 140,18 160,14 180,12 200,10" />
+          </svg>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">评测通过率 <div class="kpi-icon i4">◆</div></div>
+          <div class="kpi-val">82.5<span style="font-size:16px;color:var(--text-3);">%</span></div>
+          <div class="kpi-delta up">↑ 5.8%<span>vs v2</span></div>
+          <svg class="spark" viewBox="0 0 200 36" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#a855f7" stroke-width="1.8" points="0,26 20,24 40,20 60,22 80,18 100,15 120,17 140,12 160,14 180,8 200,10" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Chart + risk gates -->
+      <div class="split">
+        <!-- Chart -->
+        <div class="card">
+          <div class="sec-h">
+            <div>
+              <h2>解决率 vs 接管率趋势</h2>
+              <div class="sub">实时刷新 · 单位 %</div>
+            </div>
+            <div class="legend">
+              <span class="legend-item"><span class="legend-dot" style="background:#4f46e5"></span>自动解决率</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#059669"></span>人工接管率</span>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <svg viewBox="0 0 600 220" style="width:100%;height:100%;" preserveAspectRatio="none">
+              <!-- grid -->
+              <g stroke="#f1f2f4" stroke-width="1">
+                <line x1="0" y1="44" x2="600" y2="44"/>
+                <line x1="0" y1="88" x2="600" y2="88"/>
+                <line x1="0" y1="132" x2="600" y2="132"/>
+                <line x1="0" y1="176" x2="600" y2="176"/>
+              </g>
+              <!-- y labels -->
+              <g fill="#94a3b8" font-size="10" font-family="Inter">
+                <text x="0" y="10">80%</text>
+                <text x="0" y="54">60%</text>
+                <text x="0" y="98">40%</text>
+                <text x="0" y="142">20%</text>
+                <text x="0" y="186">0%</text>
+              </g>
+              <!-- x labels -->
+              <g fill="#94a3b8" font-size="10" font-family="Inter" text-anchor="middle">
+                <text x="50" y="215">Mon</text>
+                <text x="140" y="215">Tue</text>
+                <text x="230" y="215">Wed</text>
+                <text x="320" y="215">Thu</text>
+                <text x="410" y="215">Fri</text>
+                <text x="500" y="215">Sat</text>
+                <text x="590" y="215">Sun</text>
+              </g>
+              <!-- resolve rate area -->
+              <path d="M 50,110 L 140,100 L 230,94 L 320,92 L 410,88 L 500,82 L 590,78 L 590,200 L 50,200 Z" fill="rgba(79,70,229,0.1)"/>
+              <polyline fill="none" stroke="#4f46e5" stroke-width="2.4"
+                points="50,110 140,100 230,94 320,92 410,88 500,82 590,78"/>
+              <!-- handoff rate -->
+              <polyline fill="none" stroke="#059669" stroke-width="2.4"
+                points="50,140 140,136 230,144 320,138 410,146 500,150 590,152"/>
+              <!-- data dots -->
+              <g fill="#4f46e5">
+                <circle cx="50" cy="110" r="3.5"/><circle cx="140" cy="100" r="3.5"/><circle cx="230" cy="94" r="3.5"/>
+                <circle cx="320" cy="92" r="3.5"/><circle cx="410" cy="88" r="3.5"/><circle cx="500" cy="82" r="3.5"/>
+                <circle cx="590" cy="78" r="4" stroke="#fff" stroke-width="2"/>
+              </g>
+              <g fill="#059669">
+                <circle cx="50" cy="140" r="3.5"/><circle cx="140" cy="136" r="3.5"/><circle cx="230" cy="144" r="3.5"/>
+                <circle cx="320" cy="138" r="3.5"/><circle cx="410" cy="146" r="3.5"/><circle cx="500" cy="150" r="3.5"/>
+                <circle cx="590" cy="152" r="4" stroke="#fff" stroke-width="2"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Risk gates -->
+        <div class="card">
+          <div class="sec-h">
+            <div>
+              <h2>风险门槛</h2>
+              <div class="sub">Rubric v2 · 必过项</div>
+            </div>
+          </div>
+          <div class="gate-list">
+            <div class="gate-row">
+              <div class="gate-name">B3 退换规则<span class="mono">≥90%</span></div>
+              <div class="gate-bar"><div class="gate-fill pass" style="width:94%"></div></div>
+              <span class="gate-status pass">93.8%</span>
+            </div>
+            <div class="gate-row">
+              <div class="gate-name">B6 对抗诱导<span class="mono">≥95%</span></div>
+              <div class="gate-bar"><div class="gate-fill pass" style="width:100%"></div></div>
+              <span class="gate-status pass">100%</span>
+            </div>
+            <div class="gate-row">
+              <div class="gate-name">B10 欺诈识别<span class="mono">≥100%</span></div>
+              <div class="gate-bar"><div class="gate-fill pass" style="width:100%"></div></div>
+              <span class="gate-status pass">100%</span>
+            </div>
+            <div class="gate-row">
+              <div class="gate-name">B1 中国使用兼容<span class="mono">≥85%</span></div>
+              <div class="gate-bar"><div class="gate-fill pass" style="width:90%"></div></div>
+              <span class="gate-status pass">90.0%</span>
+            </div>
+            <div class="gate-row">
+              <div class="gate-name">B5 进口保修<span class="mono">≥85%</span></div>
+              <div class="gate-bar"><div class="gate-fill pass" style="width:83%"></div></div>
+              <span class="gate-status pass">83.3%</span>
+            </div>
+            <div class="gate-row">
+              <div class="gate-name">B11 情绪管理<span class="mono">≥80%</span></div>
+              <div class="gate-bar"><div class="gate-fill fail" style="width:75%"></div></div>
+              <span class="gate-status fail">75.0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- A/B Test section -->
+      <div class="ab-head">
+        <div>
+          <h2>A/B Test · exp-2026-0412-prompt</h2>
+          <p>运行 3 天 · 分流 50/50 · mock 周期 1,200 条会话</p>
+        </div>
+        <div class="head-controls">
+          <button class="btn">📋 实验日志</button>
+          <button class="btn">⏸ 暂停</button>
+          <button class="btn primary">→ 查看详情</button>
+        </div>
+      </div>
+
+      <div class="ab-split">
+        <!-- Variant A (winner) -->
+        <div class="variant winner">
+          <span class="win-badge">RECOMMENDED</span>
+          <div class="v-head">
+            <span class="v-name">variant_a</span>
+            <span class="v-split-pill">50% 分流</span>
+          </div>
+          <div class="v-title">事实先行 + 保守追问</div>
+          <div class="v-desc">必需文档严格命中、强追问补槽、情绪话术安抚优先。整体风险更低，适合大额订单场景。</div>
+          <div class="v-metrics">
+            <div class="v-metric">
+              <div class="v-metric-label">解决率</div>
+              <div class="v-metric-val na">55.4%</div>
+            </div>
+            <div class="v-metric">
+              <div class="v-metric-label">误承诺</div>
+              <div class="v-metric-val hi">0</div>
+            </div>
+            <div class="v-metric">
+              <div class="v-metric-label">补槽轮次</div>
+              <div class="v-metric-val na">1.9</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Variant B -->
+        <div class="variant">
+          <div class="v-head">
+            <span class="v-name">variant_b</span>
+            <span class="v-split-pill">50% 分流</span>
+          </div>
+          <div class="v-title">行动先行 + 扩召回</div>
+          <div class="v-desc">检索扩召回 + rerank、短回复结论优先、单轮补槽。解决率更高但出现 1 例高风险误承诺。</div>
+          <div class="v-metrics">
+            <div class="v-metric">
+              <div class="v-metric-label">解决率</div>
+              <div class="v-metric-val hi">61.2%</div>
+            </div>
+            <div class="v-metric">
+              <div class="v-metric-label">误承诺</div>
+              <div class="v-metric-val lo">1</div>
+            </div>
+            <div class="v-metric">
+              <div class="v-metric-label">补槽轮次</div>
+              <div class="v-metric-val hi">1.4</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed comparison table -->
+      <div class="card">
+        <div class="sec-h">
+          <div>
+            <h2>实验项明细</h2>
+            <div class="sub">按维度拆解，高亮胜出版本</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>实验维度</th>
+              <th>Variant A</th>
+              <th>Variant B</th>
+              <th>观察指标</th>
+              <th>胜出</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Prompt 策略</td>
+              <td>事实先行 + 强追问</td>
+              <td>行动先行 + 短回复</td>
+              <td class="mono">resolve_rate / risk_score</td>
+              <td><span class="win-tag">A</span> <span class="delta up">−风险</span></td>
+            </tr>
+            <tr>
+              <td>检索策略</td>
+              <td>必需文档强约束</td>
+              <td>扩召回 + rerank</td>
+              <td class="mono">rag_miss_rate / cite_rate</td>
+              <td><span class="win-tag">B</span> <span class="delta up">+8.2%</span></td>
+            </tr>
+            <tr>
+              <td>Handoff 阈值</td>
+              <td>首轮 angry 即转</td>
+              <td>连续 2 轮 angry 再转</td>
+              <td class="mono">handoff_rate / complaint_rate</td>
+              <td><span class="win-tag">A</span> <span class="delta up">−投诉</span></td>
+            </tr>
+            <tr>
+              <td>情绪话术模板</td>
+              <td>安抚优先</td>
+              <td>结论优先</td>
+              <td class="mono">repeat_ratio / csat</td>
+              <td><span class="win-tag">B</span> <span class="delta up">−0.4轮</span></td>
+            </tr>
+            <tr>
+              <td>高风险场景</td>
+              <td>0 例误承诺</td>
+              <td>1 例（B3 退换）</td>
+              <td class="mono">false_promise_count</td>
+              <td><span class="win-tag">A</span> <span class="delta up">零容忍胜出</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Decision -->
+        <div class="decision">
+          <div class="decision-head">产品决策建议</div>
+          <h4>推荐保留 Variant A 为默认版本，暂不切换</h4>
+          <p>虽然 B 在解决率和补槽效率上更好，但出现了 1 例高风险误承诺（B3 退换场景），在 rubric 零容忍规则下该变体阻塞上线。建议：</p>
+          <ul>
+            <li>A 保留默认流量，B 仅在非高风险场景做影子推理，持续收集数据</li>
+            <li>下周实验：把 B 的"扩召回 + rerank"叠加到 A 的 prompt 上，做 A+ 变体</li>
+            <li>这一页最重要的不是"A 赢了"，而是"你知道为什么它该赢"——零容忍 &gt; 均值胜出</li>
+          </ul>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

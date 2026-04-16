@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c ':*)",
+      "Bash(PYTHONIOENCODING=utf-8 python _transform_v2_to_v3.py)",
+      "Bash(ls -d _backup_*)",
+      "Bash(python -c \"import json; data=json.load\\(open\\('field_specs_priority5.json', encoding='utf-8'\\)\\); print\\('field_specs entries:', len\\(data\\) if isinstance\\(data, list\\) else sum\\(len\\(v\\) for v in data.values\\(\\)\\) if isinstance\\(data, dict\\) else 'unknown'\\)\")",
+      "Bash(python _gen_eval_v2.py)"
+    ]
+  }
+}

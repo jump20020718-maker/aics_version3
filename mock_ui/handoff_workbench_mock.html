@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Handoff · AiServe 人工接管台</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --border-soft: #f1f2f4;
+      --text-1: #0f172a;
+      --text-2: #475569;
+      --text-3: #94a3b8;
+      --primary: #4f46e5;
+      --primary-50: #eef2ff;
+      --primary-100: #e0e7ff;
+      --primary-600: #4338ca;
+      --success: #059669;
+      --success-50: #ecfdf5;
+      --warning: #d97706;
+      --warning-50: #fffbeb;
+      --danger: #dc2626;
+      --danger-50: #fef2f2;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text-1);
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 13.5px; line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top bar (identical style) */
+    .topbar {
+      height: 52px; background: #fff;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 20px; gap: 24px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-mark { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #6366f1, #4f46e5); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+    .brand-name { font-weight: 600; font-size: 14px; }
+    .brand-sub { color: var(--text-3); font-size: 12px; padding-left: 10px; border-left: 1px solid var(--border); }
+    .nav-tabs { display: flex; gap: 2px; margin-left: 12px; }
+    .nav-tab { padding: 7px 12px; border-radius: 7px; color: var(--text-2); font-size: 13px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .nav-tab:hover { background: var(--border-soft); }
+    .nav-tab.active { background: var(--primary-50); color: var(--primary); }
+    .nav-tab .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--warning); }
+    .top-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .search { display: flex; align-items: center; gap: 8px; padding: 6px 10px; width: 240px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text-3); font-size: 12.5px; }
+    .search kbd { margin-left: auto; font-family: "JetBrains Mono", monospace; font-size: 11px; padding: 1px 5px; border: 1px solid var(--border); border-radius: 4px; background: #fff; color: var(--text-3); }
+    .icon-btn { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; color: var(--text-2); cursor: pointer; }
+    .icon-btn:hover { background: var(--border-soft); }
+    .avatar { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #fff; display: grid; place-items: center; font-weight: 600; font-size: 11.5px; }
+
+    /* Layout */
+    .shell {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr) 360px;
+      height: calc(100vh - 52px);
+    }
+    .col {
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .col:last-child { border-right: none; border-left: 1px solid var(--border); }
+
+    /* ===== LEFT: Escalation queue ===== */
+    .queue-head {
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .queue-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .queue-title h2 { margin: 0; font-size: 15px; font-weight: 600; }
+    .queue-count { background: var(--danger-50); color: var(--danger); padding: 2px 7px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+    .queue-filters { display: flex; gap: 4px; font-size: 12px; }
+    .filter-chip { padding: 4px 9px; border-radius: 6px; color: var(--text-2); cursor: pointer; }
+    .filter-chip.active { background: var(--text-1); color: #fff; }
+    .filter-chip:not(.active):hover { background: var(--border-soft); }
+
+    .queue-list { flex: 1; overflow-y: auto; }
+    .case-row {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-soft);
+      cursor: pointer;
+      position: relative;
+    }
+    .case-row:hover { background: var(--bg); }
+    .case-row.active {
+      background: var(--primary-50);
+      border-left: 3px solid var(--primary);
+      padding-left: 13px;
+    }
+    .case-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .lvl-pill {
+      font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+      font-family: "JetBrains Mono", monospace;
+    }
+    .lvl-pill.l2 { background: #fef3c7; color: #a16207; }
+    .lvl-pill.l3 { background: #fee2e2; color: #b91c1c; }
+    .lvl-pill.l1 { background: #dbeafe; color: #1d4ed8; }
+    .case-sla { font-size: 11.5px; color: var(--danger); font-weight: 600; }
+    .case-sla.ok { color: var(--success); }
+    .case-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+    .case-sub { font-size: 12px; color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 6px; }
+    .case-meta { display: flex; gap: 10px; font-size: 11.5px; color: var(--text-3); }
+    .case-meta strong { color: var(--text-2); font-weight: 500; }
+    .case-tags { display: flex; gap: 4px; margin-top: 6px; }
+    .tag { font-size: 10.5px; padding: 1px 6px; border-radius: 4px; font-weight: 500; line-height: 1.4; }
+    .tag.risk { background: #fef2f2; color: #b91c1c; }
+    .tag.sku { background: #eef2ff; color: #4338ca; }
+    .tag.emo { background: #fff7ed; color: #c2410c; }
+
+    /* ===== CENTER: Case detail ===== */
+    .case-head {
+      padding: 14px 22px;
+      border-bottom: 1px solid var(--border-soft);
+      background: #fff;
+    }
+    .case-head-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; color: var(--text-3); }
+    .breadcrumb { display: flex; gap: 6px; font-family: "JetBrains Mono", monospace; }
+    .breadcrumb a { color: var(--text-3); }
+    .breadcrumb a.cur { color: var(--text-1); font-weight: 500; }
+    .case-head h1 { margin: 0 0 8px; font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+    .case-head-meta { display: flex; gap: 20px; font-size: 12.5px; color: var(--text-2); }
+    .case-head-meta strong { color: var(--text-1); font-weight: 500; }
+    .case-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .btn {
+      padding: 7px 13px; font-size: 12.5px; font-weight: 500;
+      border: 1px solid var(--border); border-radius: 7px;
+      background: #fff; color: var(--text-1); cursor: pointer;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .btn:hover { background: var(--bg); }
+    .btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn.primary:hover { background: var(--primary-600); }
+    .btn.danger { background: #fff; color: var(--danger); border-color: #fecaca; }
+    .btn.danger:hover { background: var(--danger-50); }
+
+    .case-body {
+      flex: 1; overflow-y: auto;
+      padding: 20px 22px;
+      background: var(--bg);
+      display: grid; gap: 14px;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .card-h {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px;
+    }
+    .card-h h3 { margin: 0; font-size: 14px; font-weight: 600; }
+    .card-h .subtle { color: var(--text-3); font-size: 11.5px; }
+
+    /* AI Summary card — highlighted */
+    .summary-card {
+      background: linear-gradient(135deg, #eef2ff 0%, #faf5ff 100%);
+      border: 1px solid #c7d2fe;
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .summary-head {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 10px;
+      font-size: 11.5px; font-weight: 600; color: var(--primary);
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .summary-head::before {
+      content: "◆"; font-size: 14px;
+    }
+    .summary-card h2 { margin: 0 0 8px; font-size: 18px; font-weight: 600; }
+    .summary-card p { margin: 0 0 12px; font-size: 13.5px; line-height: 1.65; color: var(--text-1); }
+    .summary-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 10px; margin-top: 12px;
+    }
+    .summary-kv {
+      background: rgba(255,255,255,0.7);
+      border-radius: 8px; padding: 9px 11px;
+    }
+    .summary-kv dt { font-size: 10.5px; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
+    .summary-kv dd { margin: 0; font-size: 13px; font-weight: 600; color: var(--text-1); }
+
+    /* Timeline */
+    .tl { position: relative; padding-left: 22px; }
+    .tl::before {
+      content: ""; position: absolute;
+      left: 7px; top: 4px; bottom: 4px;
+      width: 2px; background: var(--border);
+    }
+    .tl-item { position: relative; padding-bottom: 16px; }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-dot {
+      position: absolute; left: -22px; top: 4px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #fff; border: 2px solid var(--border);
+    }
+    .tl-dot.ai { border-color: var(--primary); }
+    .tl-dot.ai::after { content: ""; display: block; width: 6px; height: 6px; border-radius: 50%; background: var(--primary); margin: 3px; }
+    .tl-dot.user { border-color: #ef4444; }
+    .tl-dot.user::after { content: ""; display: block; width: 6px; height: 6px; border-radius: 50%; background: #ef4444; margin: 3px; }
+    .tl-dot.risk { border-color: var(--warning); background: var(--warning); }
+    .tl-time { font-size: 11px; color: var(--text-3); font-family: "JetBrains Mono", monospace; margin-bottom: 2px; }
+    .tl-who { font-size: 12px; font-weight: 600; margin-bottom: 3px; }
+    .tl-who.ai { color: var(--primary); }
+    .tl-who.user { color: #ef4444; }
+    .tl-who.risk { color: var(--warning); }
+    .tl-text { font-size: 12.5px; color: var(--text-2); line-height: 1.55; }
+
+    /* Tool output */
+    .tool-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    }
+    .tool-card {
+      padding: 12px; border: 1px solid var(--border-soft);
+      border-radius: 8px; background: var(--bg);
+    }
+    .tool-name {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11.5px; color: var(--primary); margin-bottom: 4px;
+    }
+    .tool-result { font-size: 12.5px; font-weight: 500; color: var(--text-1); }
+    .tool-detail { font-size: 11.5px; color: var(--text-2); margin-top: 2px; }
+    .tool-card.err { background: var(--danger-50); border-color: #fecaca; }
+    .tool-card.err .tool-result { color: var(--danger); }
+
+    /* ===== RIGHT PANEL ===== */
+    .right {
+      overflow-y: auto;
+      padding: 16px;
+      display: grid; gap: 12px;
+    }
+    .r-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .r-h {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11.5px; font-weight: 600;
+      color: var(--text-2); text-transform: uppercase;
+      letter-spacing: 0.04em; margin-bottom: 10px;
+    }
+
+    .reason-list { display: grid; gap: 8px; }
+    .reason-item {
+      display: flex; gap: 10px;
+      padding: 9px 11px; border-radius: 8px;
+      background: var(--bg);
+      font-size: 12.5px;
+    }
+    .reason-icon {
+      width: 24px; height: 24px; border-radius: 6px;
+      flex-shrink: 0; display: grid; place-items: center;
+      font-size: 12px; font-weight: 700;
+    }
+    .reason-icon.r1 { background: #fef3c7; color: #a16207; }
+    .reason-icon.r2 { background: #fee2e2; color: #b91c1c; }
+    .reason-icon.r3 { background: #dbeafe; color: #1d4ed8; }
+    .reason-item strong { display: block; font-size: 12.5px; font-weight: 600; color: var(--text-1); margin-bottom: 2px; }
+    .reason-item span { font-size: 11.5px; color: var(--text-2); }
+
+    .action-list { display: grid; gap: 8px; }
+    .action-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 11px;
+      border: 1px solid var(--border); border-radius: 8px;
+      cursor: pointer; background: #fff;
+    }
+    .action-item:hover { border-color: var(--primary); background: var(--primary-50); }
+    .action-item .num {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--primary); color: #fff;
+      display: grid; place-items: center;
+      font-size: 11px; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .action-item strong { display: block; font-size: 12.5px; font-weight: 500; }
+    .action-item span { font-size: 11.5px; color: var(--text-3); }
+
+    /* Note textarea */
+    .note-box {
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 10px; min-height: 76px;
+      font-size: 12.5px; color: var(--text-3);
+      background: var(--bg);
+    }
+    .note-foot {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 8px;
+    }
+    .note-hint { font-size: 11px; color: var(--text-3); }
+    .note-submit {
+      padding: 5px 11px; font-size: 12px; font-weight: 500;
+      background: var(--text-1); color: #fff;
+      border: none; border-radius: 6px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">◆</div>
+      <span class="brand-name">AiServe</span>
+      <span class="brand-sub">跨境家电 AI 客服</span>
+    </div>
+    <nav class="nav-tabs">
+      <a class="nav-tab">Inbox</a>
+      <a class="nav-tab active"><span class="dot"></span>Handoff</a>
+      <a class="nav-tab">Console</a>
+      <a class="nav-tab">Knowledge</a>
+    </nav>
+    <div class="top-right">
+      <div class="search">
+        <span>🔍</span>
+        <span>搜工单 / 客户 / 风控标签</span>
+        <kbd>⌘K</kbd>
+      </div>
+      <div class="icon-btn">🔔</div>
+      <div class="avatar">JL</div>
+    </div>
+  </header>
+
+  <div class="shell">
+    <!-- ============ LEFT: Queue ============ -->
+    <aside class="col">
+      <div class="queue-head">
+        <div class="queue-title">
+          <h2>Escalation Queue</h2>
+          <span class="queue-count">5</span>
+        </div>
+        <div class="queue-filters">
+          <span class="filter-chip active">全部</span>
+          <span class="filter-chip">L2</span>
+          <span class="filter-chip">L3</span>
+          <span class="filter-chip">SLA 超时</span>
+        </div>
+      </div>
+      <div class="queue-list">
+        <div class="case-row active">
+          <div class="case-top">
+            <span class="lvl-pill l2">L2</span>
+            <span class="case-sla">⏱ 12 分钟</span>
+          </div>
+          <div class="case-title">Liebherr 门板压痕案</div>
+          <div class="case-sub">ORD-2026-0019 · 赵薇 · 成都</div>
+          <div class="case-meta">
+            <span>¥<strong>12,410</strong></span>
+            <span>SKU <strong>LIEB-BFR-EU-2027</strong></span>
+          </div>
+          <div class="case-tags">
+            <span class="tag risk">empty_box</span>
+            <span class="tag sku">高价值</span>
+          </div>
+        </div>
+        <div class="case-row">
+          <div class="case-top">
+            <span class="lvl-pill l3">L3</span>
+            <span class="case-sla">⏱ 3 分钟</span>
+          </div>
+          <div class="case-title">用户威胁小红书曝光</div>
+          <div class="case-sub">ORD-2026-0041 · 王勇 · 深圳</div>
+          <div class="case-meta">
+            <span>¥<strong>8,290</strong></span>
+          </div>
+          <div class="case-tags">
+            <span class="tag emo">愤怒</span>
+            <span class="tag risk">曝光威胁</span>
+          </div>
+        </div>
+        <div class="case-row">
+          <div class="case-top">
+            <span class="lvl-pill l2">L2</span>
+            <span class="case-sla ok">⏱ 28 分钟</span>
+          </div>
+          <div class="case-title">序列号查不到真伪疑虑</div>
+          <div class="case-sub">ORD-2026-0087 · 黄杰 · 广州</div>
+          <div class="case-meta">
+            <span>¥<strong>5,680</strong></span>
+          </div>
+          <div class="case-tags">
+            <span class="tag sku">BOSCH-DW</span>
+          </div>
+        </div>
+        <div class="case-row">
+          <div class="case-top">
+            <span class="lvl-pill l2">L2</span>
+            <span class="case-sla ok">⏱ 45 分钟</span>
+          </div>
+          <div class="case-title">重复退款申请</div>
+          <div class="case-sub">ORD-2026-0098 · 郑华 · 北京</div>
+          <div class="case-meta">
+            <span>¥<strong>3,200</strong></span>
+          </div>
+          <div class="case-tags">
+            <span class="tag risk">duplicate_refund</span>
+          </div>
+        </div>
+        <div class="case-row">
+          <div class="case-top">
+            <span class="lvl-pill l1">L1</span>
+            <span class="case-sla ok">⏱ 1 小时</span>
+          </div>
+          <div class="case-title">清关 10 天无更新</div>
+          <div class="case-sub">ORD-2026-0123 · 陈慧 · 北京</div>
+          <div class="case-meta">
+            <span>¥<strong>1,890</strong></span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ============ CENTER: Case detail ============ -->
+    <main class="col" style="border-right: 1px solid var(--border);">
+      <div class="case-head">
+        <div class="case-head-top">
+          <div class="breadcrumb">
+            <a>Handoff Queue</a>
+            <span>/</span>
+            <a>L2</a>
+            <span>/</span>
+            <a class="cur">ORD-2026-0019</a>
+          </div>
+        </div>
+        <h1>Liebherr 门板压痕案 · 转 L2 主管接手</h1>
+        <div class="case-head-meta">
+          <span>客户 <strong>赵薇</strong></span>
+          <span>订单 <strong>ORD-2026-0019</strong></span>
+          <span>金额 <strong>¥12,410</strong></span>
+          <span>发起时间 <strong>14:04</strong></span>
+          <span style="color: var(--danger);">SLA ⏱ <strong>12 分钟</strong></span>
+        </div>
+        <div class="case-actions">
+          <button class="btn primary">✓ 接手此案</button>
+          <button class="btn">💬 打开对话</button>
+          <button class="btn">📞 回拨客户</button>
+          <button class="btn">↑ 再升级 L3</button>
+          <button class="btn danger">🚫 驳回转接</button>
+        </div>
+      </div>
+
+      <div class="case-body">
+        <!-- AI Summary -->
+        <div class="summary-card">
+          <div class="summary-head">AI 生成的案情摘要 · handoff_summary</div>
+          <h2>关键判断：不能在取证前承诺赔付，建议 L2 人工复核并决定是否冻结低级别赔付</h2>
+          <p>用户购买 Liebherr EU 版冰箱（¥12,410），签收 3 天后反馈门板右上角压痕。已上传 3 张近景照片，但缺少完整开箱视频和外箱面单。同地址历史单命中 <strong>empty_box_claim</strong> 风控信号。AI 已按 SOP 完成首轮取证引导，因高客单价 + 风控命中双条件，触发 L2 升级。</p>
+          <div class="summary-grid">
+            <dl class="summary-kv"><dt>会话场景迁移</dt><dd>damage → complaint → risk_review</dd></dl>
+            <dl class="summary-kv"><dt>证据完整度</dt><dd>3 / 5 · 缺视频</dd></dl>
+            <dl class="summary-kv"><dt>AI 推荐动作</dt><dd>转 L2 + 冻结 ≤L1</dd></dl>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="card">
+          <div class="card-h">
+            <h3>对话时间线</h3>
+            <span class="subtle">共 6 轮 · 4 分 18 秒</span>
+          </div>
+          <div class="tl">
+            <div class="tl-item">
+              <div class="tl-dot user"></div>
+              <div class="tl-time">14:02:11</div>
+              <div class="tl-who user">客户</div>
+              <div class="tl-text">"门板右上角有压痕，外箱看起来没破，这种能处理吗？"</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot ai"></div>
+              <div class="tl-time">14:02:14 · 1.4s</div>
+              <div class="tl-who ai">AI 回复</div>
+              <div class="tl-text">引导上传开箱视频 + 外箱面单 + 压痕多角度照片，明确"取证前不承诺赔付"。引用 damage_signoff_sop（tier-1）。</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot user"></div>
+              <div class="tl-time">14:04:02</div>
+              <div class="tl-who user">客户</div>
+              <div class="tl-text">上传 3 张照片，追加情绪："一万多块钱，出了问题你们不管吗？"</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot risk"></div>
+              <div class="tl-time">14:04:05 · tool call</div>
+              <div class="tl-who risk">风控引擎</div>
+              <div class="tl-text">同地址历史匹配到 empty_box_claim · 信号等级 high · 建议 block_compensation_below_l2</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot ai"></div>
+              <div class="tl-time">14:04:07 · 1.6s</div>
+              <div class="tl-who ai">AI 回复</div>
+              <div class="tl-text">承认情绪，说明"视频缺失不等于拒绝受理"，主动声明"将转 L2 主管进一步判责"。</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot risk"></div>
+              <div class="tl-time">14:04:12</div>
+              <div class="tl-who risk">系统</div>
+              <div class="tl-text">触发 handoff 规则：高价值 + 风控命中 → L2 队列</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tool output -->
+        <div class="card">
+          <div class="card-h">
+            <h3>工具调用记录</h3>
+            <span class="subtle">3 次调用 · 1 次异常</span>
+          </div>
+          <div class="tool-grid">
+            <div class="tool-card">
+              <div class="tool-name">order_query</div>
+              <div class="tool-result">已签收 2026-04-12</div>
+              <div class="tool-detail">签收 3 天 · 在 15 天申报窗内</div>
+            </div>
+            <div class="tool-card err">
+              <div class="tool-name">logistics_query</div>
+              <div class="tool-result">异常待复核</div>
+              <div class="tool-detail">承运商最新节点滞留 &gt; 48h</div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-name">risk_signal</div>
+              <div class="tool-result">block_compensation_below_l2</div>
+              <div class="tool-detail">同地址历史 empty_box × 1</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ============ RIGHT: Actions ============ -->
+    <aside class="col">
+      <div class="right">
+        <!-- Reasons -->
+        <div class="r-card">
+          <div class="r-h">升级原因</div>
+          <div class="reason-list">
+            <div class="reason-item">
+              <div class="reason-icon r2">¥</div>
+              <div>
+                <strong>高客单价 ¥12,410</strong>
+                <span>超过 AI 自主承诺上限 ¥1,000</span>
+              </div>
+            </div>
+            <div class="reason-item">
+              <div class="reason-icon r2">!</div>
+              <div>
+                <strong>风控信号命中</strong>
+                <span>empty_box_claim × 同地址历史</span>
+              </div>
+            </div>
+            <div class="reason-item">
+              <div class="reason-icon r1">△</div>
+              <div>
+                <strong>证据链不完整</strong>
+                <span>缺开箱视频 + 外箱面单</span>
+              </div>
+            </div>
+            <div class="reason-item">
+              <div class="reason-icon r3">♥</div>
+              <div>
+                <strong>情绪升温</strong>
+                <span>第 2 轮出现质疑语气</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recommended actions -->
+        <div class="r-card">
+          <div class="r-h">主管建议动作</div>
+          <div class="action-list">
+            <div class="action-item">
+              <div class="num">1</div>
+              <div>
+                <strong>回电核对签收链路</strong>
+                <span>确认压痕是否签收前已存在</span>
+              </div>
+            </div>
+            <div class="action-item">
+              <div class="num">2</div>
+              <div>
+                <strong>要求补齐视频或记录缺失</strong>
+                <span>48h 内，不强制</span>
+              </div>
+            </div>
+            <div class="action-item">
+              <div class="num">3</div>
+              <div>
+                <strong>判断是否升级法务</strong>
+                <span>若涉及索赔 ≥ ¥5,000</span>
+              </div>
+            </div>
+            <div class="action-item">
+              <div class="num">4</div>
+              <div>
+                <strong>回写 memory_case</strong>
+                <span>标记是否进评测候选池</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Handoff notes -->
+        <div class="r-card">
+          <div class="r-h">接管备注</div>
+          <div class="note-box">
+            记录判责依据、客户沟通要点、是否冻结赔付…
+          </div>
+          <div class="note-foot">
+            <span class="note-hint">提交后将附加到工单并回写 RAG</span>
+            <button class="note-submit">保存并接手</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

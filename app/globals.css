@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #f6f7f9;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --border-soft: #f1f2f4;
+  --text-1: #0f172a;
+  --text-2: #475569;
+  --text-3: #94a3b8;
+  --primary: #4f46e5;
+  --primary-50: #eef2ff;
+  --primary-100: #e0e7ff;
+  --primary-600: #4338ca;
+  --success: #059669;
+  --success-50: #ecfdf5;
+  --warning: #d97706;
+  --warning-50: #fffbeb;
+  --danger: #dc2626;
+  --danger-50: #fef2f2;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+code,
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ========== 通用组件 ========== */
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text-1);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+.btn:hover {
+  background: var(--bg);
+}
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.btn-primary:hover {
+  background: var(--primary-600);
+}
+.btn-danger {
+  background: var(--danger-50);
+  color: var(--danger);
+  border-color: #fecaca;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+.pill-primary { background: var(--primary-50); color: var(--primary); }
+.pill-success { background: var(--success-50); color: var(--success); }
+.pill-warning { background: var(--warning-50); color: var(--warning); }
+.pill-danger  { background: var(--danger-50);  color: var(--danger); }
+.pill-muted   { background: var(--border-soft); color: var(--text-2); }
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot-success { background: var(--success); }
+.dot-warning { background: var(--warning); }
+.dot-danger  { background: var(--danger);  }
+.dot-primary { background: var(--primary); }
+
+/* ========== Thinking / Reasoning / Citation ========== */
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 0.3; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.thinking-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  display: inline-block;
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
+
+.reasoning-trace {
+  border-left: 2px solid var(--primary-100);
+  padding: 8px 0 8px 14px;
+  margin: 8px 0;
+}
+.reasoning-step {
+  font-size: 12px;
+  color: var(--text-2);
+  padding: 4px 0;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.reasoning-step .icon {
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+}
+
+.citation-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--primary-50);
+  color: var(--primary-600);
+  border: 1px solid var(--primary-100);
+  cursor: pointer;
+}
+.citation-chip .tier-1 { color: #059669; }
+.citation-chip .tier-2 { color: #0891b2; }
+.citation-chip .tier-3 { color: #d97706; }
+.citation-chip .tier-4 { color: #94a3b8; }
+
+/* ========== 对话气泡 ========== */
+
+.bubble {
+  max-width: 680px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  word-break: break-word;
+}
+.bubble-user {
+  background: #fff;
+  border: 1px solid var(--border);
+  color: var(--text-1);
+}
+.bubble-ai {
+  background: var(--primary);
+  color: #fff;
+}
+.bubble-agent {
+  background: #065f46;
+  color: #fff;
+}
+.bubble-system {
+  background: var(--border-soft);
+  color: var(--text-2);
+  font-size: 12px;
+}
+
+/* ========== 表格 ========== */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.table th {
+  text-align: left;
+  padding: 9px 12px;
+  color: var(--text-3);
+  font-weight: 500;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.table td {
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  color: var(--text-1);
+}
+.table tr:hover td {
+  background: var(--bg);
+}
+
+/* ========== Scroll ========== */
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}

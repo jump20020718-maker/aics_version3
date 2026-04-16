@@ -1,0 +1,11 @@
+﻿ledger_id,order_id,session_id,customer_id,compensation_type,amount_cny,approval_level,approver_role,rule_card_ref,evidence_ids,status,issued_at,risk_guardrail
+LED-0001,ORD-2026-0003,SES-MOCK-0003,CUS-0003,coupon_credit,50,AI,AI,POL-DMG-001,,approved,2026-03-12T21:00:00,超出 AI 权限时必须进入 handoff_case 和 compensation_ledger
+LED-0002,ORD-2026-0007,SES-MOCK-0007,CUS-0007,delay_credit,120,L1,L1,POL-DMG-001,,approved,2026-03-15T21:00:00,超出 AI 权限时必须进入 handoff_case 和 compensation_ledger
+LED-0003,ORD-2026-0013,SES-MOCK-0013,CUS-0013,damage_partial_refund,380,L1,L1,POL-DMG-001,EVD-0003;EVD-0013,approved,2026-03-20T09:00:00,超出 AI 权限时必须进入 handoff_case 和 compensation_ledger
+LED-0004,ORD-2026-0020,SES-MOCK-0020,CUS-0020,price_match_credit,260,L1,L1,POL-PRICE-001,,approved,2026-03-25T15:00:00,超出 AI 权限时必须进入 handoff_case 和 compensation_ledger
+LED-0005,ORD-2026-0023,SES-MOCK-0023,CUS-0023,vip_retention,480,L2,L2,POL-DMG-001,,approved,2026-03-27T21:00:00,超出 AI 权限时必须进入 handoff_case 和 compensation_ledger
+LED-0006,ORD-2026-0032,SES-MOCK-0032,CUS-0032,exception_shipping_upgrade,680,L2,L2,POL-DMG-001,,approved,2026-04-03T15:00:00,超出 AI 权限时必须进入 handoff_case 和 compensation_ledger
+LED-0007,ORD-2026-0047,SES-MOCK-0047,CUS-0005,door_to_door_pickup,980,L2,L2,POL-DMG-001,,approved,2026-04-14T21:00:00,超出 AI 权限时必须进入 handoff_case 和 compensation_ledger
+LED-0008,ORD-2026-0059,SES-MOCK-0059,CUS-0017,glass_panel_claim,1800,L2,L2,POL-DMG-001,,approved,2026-04-23T21:00:00,超出 AI 权限时必须进入 handoff_case 和 compensation_ledger
+LED-0009,ORD-2026-0077,SES-MOCK-0077,CUS-0035,high_value_damage,5200,L3,Finance+Legal,POL-DMG-001,EVD-0009;EVD-0019,approved,2026-05-07T09:00:00,超出 AI 权限时必须进入 handoff_case 和 compensation_ledger
+LED-0010,ORD-2026-0092,SES-MOCK-0092,CUS-0008,media_risk_settlement,9800,L3,Finance+Legal,POL-DMG-001,,approved,2026-05-18T15:00:00,超出 AI 权限时必须进入 handoff_case 和 compensation_ledger
