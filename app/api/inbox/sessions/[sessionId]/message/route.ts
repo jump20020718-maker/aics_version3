@@ -13,8 +13,8 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { streamLLM } from "@/lib/llm/client";
-import { getApiKey } from "@/app/api/settings/api-keys/route";
-import { getActiveModel } from "@/app/api/models/route";
+import { getActiveModel } from "@/lib/models";
+import { getApiKey } from "@/lib/api-keys";
 import type { LLMMessage } from "@/lib/llm/types";
 
 // ── RAG 关键词检索 ──────────────────────────────────────────

@@ -112,37 +112,12 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// ── 工具函数（供内部路由使用）────────────────────────────────
+// ── 工具函数 ──────────────────────────────────────────────
 
 function safeParseJson<T>(value: string, fallback: T): T {
   try {
     return JSON.parse(value) as T;
   } catch {
     return fallback;
-  }
-}
-
-/**
- * 获取当前激活路由方案中的模型配置。
- * 如果没有激活路由方案，取第一个 enabled=true 的模型作为兜底。
- */
-export async function getActiveModel() {
-  try {
-    // 尝试读取激活的路由方案
-    const activePlan = await prisma.routePlan.findFirst({
-      where: { isActive: true },
-    });
-
-    if (activePlan) {
-      const model = await prisma.model.findUnique({
-        where: { id: activePlan.fallbackModelId },
-      });
-      if (model?.enabled) return model;
-    }
-
-    // fallback：取第一个 enabled 的模型
-    return await prisma.model.findFirst({ where: { enabled: true } });
-  } catch {
-    return null;
   }
 }
