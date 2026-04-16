@@ -1,8 +1,7 @@
 // ============================================================
-// AI 客服家电 demo — 合并 schema
+// AI 客服家电 — 合并 schema
 // 数据源：PRD_v3_final.md §11 + 现有 db/prisma/schema.prisma 领域模型
-// DB: SQLite（demo 用，可直接跑）
-// 注：Postgres-only 能力（vector, Decimal, @db.Text）已降级为 SQLite 兼容
+// DB: PostgreSQL（Neon 云数据库，兼容 Vercel 部署）
 // ============================================================
 
 generator client {
@@ -10,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
